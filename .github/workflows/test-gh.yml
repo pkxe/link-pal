@@ -22,9 +22,7 @@ jobs:
   RunCommand:
     name: Run az cli to register
     runs-on: 'ubuntu-latest'
-    strategy:
-      matrix:
-        environment: [inputs.environment]
+    environment: ${{ inputs.environment }}
 
     steps:
       - name: Log in to Azure
