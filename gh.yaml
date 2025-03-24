@@ -18,22 +18,17 @@ on:
         required: true
         default: '1699614'
 
-env:
-  Dev: credsDev
-  Test: credsTest
-  PreProd: credsPreProd
-  Prod: credsProd
-
 jobs:
   RunCommand:
     name: Run az cli to register
     runs-on: 'ubuntu-latest'
+    environment: ${{ inputs.environment }}
 
     steps:
       - name: Log in to Azure
         uses: azure/login@v1
         with:
-          creds: ${{ secrets[env[inputs.environment]] }}
+          creds: ${{ secrets.creds }}
 
       - name: Run az managementpartner create
         run: |
