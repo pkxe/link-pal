@@ -1,0 +1,36 @@
+name: Link PAL
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment Kind'
+        required: true
+        default: 'Dev'
+        type: choice
+        options:
+          - Dev
+          - Test
+          - PreProd
+          - Prod
+      partnerId:
+        description: 'Partner ID'
+        required: true
+        default: '1699614'
+
+jobs:
+  RunCommand:
+    name: Run az cli to register
+    runs-on: 'ubuntu-latest'
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.creds }}
+
+      - name: Run az managementpartner create
+        run: |
+          echo "Running az managementpartner create --partner-id ${{ inputs.partnerId }}"
+          az managementpartner create --partner-id ${{ inputs.partnerId }}
