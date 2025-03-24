@@ -1,0 +1,43 @@
+---
+name: Link PAL 
+trigger: none
+
+parameters:
+  - name: environment
+    displayName: Environment Kind
+    values:
+      - Dev
+      - Test
+      - PreProd
+      - Prod
+  - name: partnerId
+    displayName: Parner Id
+    type: string
+    default: 1699614
+    
+variables:
+  Dev: my-service-connection-dev
+  Test: my-service-connection-qa
+  PreProd: my-service-connection-pre-prod
+  Prod: my-service-connection-prod
+
+stages:
+  - stage: RunCommand
+    displayName: Stage - Run az cli to register
+    jobs:
+      - job: ExecuteAzCommand
+        pool:
+          ${{ if or(eq('${{ parameters.environment }}', 'Prod'),eq('${{ parameters.environment }}', 'PreProd')) }}:
+            name: my-linux-pool-prod
+          ${{ else }}:
+            name: my-linux-pool-non-prod
+        displayName: Job - Run az cli to register
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: ${{ variables[format('{0}', parameters.environment)] }}      
+              scriptType: 'bash'
+              displayName: 'Run az managementpartner create --partner-id ${{ parameters.partnerId }}'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                az managementpartner create --partner-id ${{ parameters.partnerId }}
