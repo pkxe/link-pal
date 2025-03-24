@@ -16,18 +16,18 @@ on:
       partnerId:
         description: 'Partner ID'
         required: true
-        default: '12345678'
+        default: '1699614'
 
 env:
-  Dev: my-service-connection-dev
-  Test: my-service-connection-qa
-  PreProd: my-service-connection-pre-prod
-  Prod: my-service-connection-prod
+  Dev: credsDev
+  Test: credsTest
+  PreProd: credsPreProd
+  Prod: credsProd
 
 jobs:
   RunCommand:
     name: Run az cli to register
-    runs-on: ${{ inputs.environment == 'Prod' || inputs.environment == 'PreProd' && 'ubuntu-22.04' || 'ubuntu-latest' }}
+    runs-on: 'ubuntu-latest'
 
     steps:
       - name: Log in to Azure
